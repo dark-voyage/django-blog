@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9%u=t%=i3blmfh$ow%ivlbvcm0ne1&5k1z*)@69*^-1d+hf=&1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['elzodxon-django-blog.herokuapp.com']
+ALLOWED_HOSTS = ['https://elzodxon-django-blog.herokuapp.com/', 'https://127.0.0.1:8000', 'https://localhost', '127.0.0.1', 'elzodxon-django-blog.herokuapp.com']
 CSRF_TRUSTED_ORIGINS = [
-    'elzodxon-django-blog.herokuapp.com'
+    'https://elzodxon-django-blog.herokuapp.com/', 'https://127.0.0.1:8000', 'https://localhost',
 ]
 
 
