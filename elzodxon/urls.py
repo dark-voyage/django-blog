@@ -24,6 +24,8 @@ urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('register/', RegisterView.as_view(), name='register'),
     path('api/', include('blog.urls')),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
