@@ -164,5 +164,3 @@ JWT_AUTH_COOKIE = 'jwt-auth'
 
 LOGIN_URL = 'auth/login/'
 
-import django_heroku
-django_heroku.settings(locals())
