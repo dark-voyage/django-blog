@@ -67,6 +67,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'elzodxon.urls'
 
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+   ),
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+   ),
+}
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -189,5 +199,5 @@ SWAGGER_SETTINGS = {
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'jwt-auth'
 
-LOGIN_URL = 'auth/login/'
+LOGIN_URL = 'REST_USE_JWT = Trueauth/login/'
 

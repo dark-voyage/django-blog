@@ -66,16 +66,16 @@ class Post(BaseModel):
     time = models.IntegerField(default=1, editable=False)
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            import math
-            self.time = math.ceil(len(self.body.split()) / 60)
+        import math
+        self.time = math.ceil(len(str(self.body)) / 500)
         super(Post, self).save(*args, **kwargs)
 
 class Comment(BaseModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = RichTextUploadingField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    replied_to = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    replied_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+
 
 class Profile(BaseModel):
     image = models.ImageField(upload_to='images/%Y/%m', null=True, blank=True)

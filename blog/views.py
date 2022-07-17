@@ -18,16 +18,23 @@ class PostDetailView(RetrieveAPIView):
     serializer_class = PostSerializer
 
 
-class CommentListCreateView(ListCreateAPIView):
+class CommentListView(ListAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
-    def get_queryset(self, post_slug):
+    def get_queryset(self):
+        post_slug = self.request.query_params.get('post_slug')
         return Comment.objects.filter(post__slug=post_slug)
 
+class CommentCreateView(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class CommentRUDView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "slug"
+    lookup_field = "pk"
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
