@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from blog.helpers import generate_unique_slug, remove_tags
 from django.utils.text import slugify
+from rest_framework.exceptions import ValidationError
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -78,7 +79,7 @@ class Comment(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.replied_to.post is not None and self.post != self.replied_to.post:
-            pass
+            return ValidationError({"message":"You tried to access other one's account"})
         else:
             super(Comment, self).save(*args, **kwargs)
 
