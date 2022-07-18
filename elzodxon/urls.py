@@ -18,6 +18,8 @@ from django.urls import path, include, re_path
 
 from elzodxon.drf_yasg import schema_view
 from blog.views import RegisterView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
