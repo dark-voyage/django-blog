@@ -3,7 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from blog.helpers import generate_unique_slug
+from blog.helpers import generate_unique_slug, remove_tags
 from django.utils.text import slugify
 
 class BaseModel(models.Model):
@@ -67,7 +67,7 @@ class Post(BaseModel):
 
     def save(self, *args, **kwargs):
         import math
-        self.time = math.ceil(len(str(self.body)) / 500)
+        self.time = math.ceil(len(remove_tags(self.body)) / 1400)
         super(Post, self).save(*args, **kwargs)
 
 class Comment(BaseModel):
@@ -75,6 +75,13 @@ class Comment(BaseModel):
     body = RichTextUploadingField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     replied_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if self.replied_to.post is not None and self.post != self.replied_to.post:
+            pass
+        else:
+            super(Comment, self).save(*args, **kwargs)
+
 
 
 class Profile(BaseModel):

@@ -30,6 +30,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://elzodxon-django-blog.herokuapp.com/', 'https://127.0.0.1:8000', 'https://localhost',
 ]
 
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_USE_SESSION = True
 
 # Application definition
 
@@ -67,14 +69,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'elzodxon.urls'
 
-REST_FRAMEWORK = {
-   'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework.authentication.TokenAuthentication',
-   ),
-   'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-   ),
-}
+
 
 
 TEMPLATES = [
@@ -193,7 +188,17 @@ SWAGGER_SETTINGS = {
             'in': 'header'
         }
     },
-    'USE_SESSION_AUTH': False,
+    'USE_SESSION_AUTH': True,
+}
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+       'rest_framework.authentication.SessionAuthentication',
+   ),
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+   ),
 }
 
 REST_USE_JWT = True

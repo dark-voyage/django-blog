@@ -2,7 +2,7 @@ from django.core.cache import cache
 from django.db.models import ManyToManyField
 from django.utils import timezone
 from django.utils.text import slugify
-
+import xml.etree.ElementTree
 
 
 def generate_unique_slug(klass, field):
@@ -93,3 +93,10 @@ def auto_increment(request, instance):
                 setattr(instance, item, get)
                 instance.save()
                 break
+
+
+def remove_tags(raw_html):
+    import re
+    CLEANR = re.compile('<.*?>')
+    cleantext = re.sub(CLEANR, '', raw_html)
+    return "".join(cleantext.split())
