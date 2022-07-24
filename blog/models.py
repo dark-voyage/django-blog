@@ -78,7 +78,7 @@ class Comment(BaseModel):
     replied_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        if self.replied_to.post is not None and self.post != self.replied_to.post:
+        if self.replied_to is not None and self.post != self.replied_to.post:
             return ValidationError({"message":"You tried to access other one's account"})
         else:
             super(Comment, self).save(*args, **kwargs)
