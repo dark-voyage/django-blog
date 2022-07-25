@@ -27,8 +27,7 @@ class CommentListView(ListAPIView):
         post_slug = self.request.query_params.get('post_slug')
         return Comment.objects.filter(post__slug=post_slug)
 
-class CommentCreateView(CreateAPIVie
-w):
+class CommentCreateView(CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
