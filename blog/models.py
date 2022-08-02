@@ -15,27 +15,6 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return f"{self.__class__.__name__} {self.pk}"
-
-
-    def save(self, *args, **kwargs):
-        """Slug generator"""
-        if hasattr(self, 'slug') and hasattr(self, 'link'):
-            if self.slug:
-                if slugify(self.link) != self.slug:
-                    self.slug = generate_unique_slug(self.__class__, self.link)
-            else:  # create
-                self.slug = generate_unique_slug(self.__class__, self.link)
-
-        elif hasattr(self, 'slug') and hasattr(self, 'title'):  # edit
-            if self.slug:
-                if slugify(self.title) != self.slug:
-                    self.slug = generate_unique_slug(self.__class__, self.title)
-            else:  # create
-                self.slug = generate_unique_slug(self.__class__, self.title)
-
-        super(BaseModel, self).save(*args, **kwargs)
 
     @property
     def image_url(self):
@@ -54,6 +33,15 @@ class BaseModel(models.Model):
 class PostType(BaseModel):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
+    
+    def save(self, *args, **kwargs):
+        from blog.helpers import slug_check
+        self.title = slug_check(Post, self)
+        super(PostType, self).save()
+
+    def __str__(self):
+        return self.title
+
 
 class Post(BaseModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -69,7 +57,13 @@ class Post(BaseModel):
     def save(self, *args, **kwargs):
         import math
         self.time = math.ceil(len(remove_tags(self.body)) / 1400)
+        from blog.helpers import slug_check
+        self.title = slug_check(Post, self)
         super(Post, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
 
 class Comment(BaseModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -83,12 +77,17 @@ class Comment(BaseModel):
         else:
             super(Comment, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return f"Comment in {self.post} and id {self.id}"
 
 
 class Profile(BaseModel):
     image = models.ImageField(upload_to='images/%Y/%m', null=True, blank=True)
     bio = models.CharField(max_length=255, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
 
 
 @receiver(post_save, sender=User)

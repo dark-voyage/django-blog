@@ -100,3 +100,24 @@ def remove_tags(raw_html):
     CLEANR = re.compile('<.*?>')
     cleantext = re.sub(CLEANR, '', raw_html)
     return "".join(cleantext.split())
+
+
+from django.utils.text import slugify
+
+def slug_check(model, self):
+        gallery = model.objects.filter(id=self.id).first()
+        if gallery and gallery.slug == self.slug:
+            return self.slug
+        origin_slug = slugify(str(self.slug))
+        unique_slug = origin_slug
+        numb = ''
+        while g:=model.objects.filter(slug=unique_slug).first():
+            print(g.id)
+            if g.id==self.id:
+                self.slug = unique_slug
+                return self.slug
+            unique_slug = '%s%s%s' % (origin_slug, numb and '-', numb)
+            numb = (numb or 0) + 1
+        print(unique_slug, "unique slug")
+        self.slug = unique_slug
+        return self.slug
